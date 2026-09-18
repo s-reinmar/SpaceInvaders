@@ -31,11 +31,10 @@ public class GalagaGame extends JFrame implements ScreenNavigator {
         setResizable(false);
 
         add(screens);
+        navigateTo(ScreenType.MENU);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-
-        navigateTo(ScreenType.MENU);
     }
 
     @Override
