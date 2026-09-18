@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import controller.InputHandler;
@@ -19,10 +20,17 @@ import model.Player;
  */
 public class GamePanel extends JPanel {
 
+    private static final String PLAYER_SPRITE = "galaga_ship.png";
+    private static final String ENEMY_SPRITE = "galaga_enemy_1.png";
+
     private final Game game;
+    private final BufferedImage playerSprite;
+    private final BufferedImage enemySprite;
 
     public GamePanel(Game game, InputHandler inputHandler) {
         this.game = game;
+        this.playerSprite = SpriteLoader.load(PLAYER_SPRITE);
+        this.enemySprite = SpriteLoader.load(ENEMY_SPRITE);
         setPreferredSize(new Dimension(Game.BOARD_WIDTH, Game.BOARD_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
@@ -44,9 +52,7 @@ public class GamePanel extends JPanel {
 
     private void drawPlayer(Graphics2D g2d) {
         Player player = game.getPlayer();
-        g2d.setColor(Color.CYAN);
-        g2d.fillRect(player.getX(), player.getY() + 10, player.getWidth(), player.getHeight() - 10);
-        g2d.fillRect(player.getX() + 12, player.getY(), 6, 10); // Działo
+        g2d.drawImage(playerSprite, player.getX(), player.getY(), player.getWidth(), player.getHeight(), null);
     }
 
     private void drawBullets(Graphics2D g2d) {
@@ -58,11 +64,7 @@ public class GamePanel extends JPanel {
 
     private void drawEnemies(Graphics2D g2d) {
         for (Enemy enemy : game.getEnemies()) {
-            g2d.setColor(Color.RED);
-            g2d.fillRect(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
-            g2d.setColor(Color.WHITE);
-            g2d.fillRect(enemy.getX() + 4, enemy.getY() + 4, 4, 4);
-            g2d.fillRect(enemy.getX() + 17, enemy.getY() + 4, 4, 4);
+            g2d.drawImage(enemySprite, enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight(), null);
         }
     }
 
