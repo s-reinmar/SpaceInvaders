@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Model statku gracza.
  */

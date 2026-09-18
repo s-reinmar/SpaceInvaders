@@ -1,6 +1,11 @@
+package controller;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
+
+import model.Game;
+import view.GamePanel;
 
 /**
  * Kontroler spinający model (Game) z widokiem (GamePanel) oraz wejściem (InputHandler).

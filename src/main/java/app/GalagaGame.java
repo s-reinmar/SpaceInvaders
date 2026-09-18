@@ -1,5 +1,12 @@
+package app;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import controller.GameController;
+import controller.InputHandler;
+import model.Game;
+import view.GamePanel;
 
 /**
  * Punkt wejścia aplikacji. Składa (wiring) model (Game), widok (GamePanel)

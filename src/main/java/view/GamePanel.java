@@ -1,9 +1,17 @@
+package view;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+
+import controller.InputHandler;
+import model.Bullet;
+import model.Enemy;
+import model.Game;
+import model.Player;
 
 /**
  * Widok gry — wyłącznie rysuje aktualny stan modelu (Game).
