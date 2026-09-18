@@ -1,83 +1,83 @@
 package app;
 
 import java.awt.CardLayout;
+import java.util.EnumMap;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import controller.GameController;
-import controller.InputHandler;
-import model.Game;
-import view.GamePanel;
-import view.InstructionsPanel;
-import view.MenuPanel;
-
 /**
- * Punkt wejścia aplikacji. Zarządza przełączaniem ekranów (menu, instrukcje, gra)
- * oraz składa (wiring) model, widok i kontroler gry, gdy użytkownik ją uruchomi.
+ * Punkt wejścia aplikacji. Pełni rolę "composition root": tworzy okno,
+ * deleguje tworzenie ekranów do {@link ScreenFactory} i przełącza je
+ * przez {@link CardLayout}, implementując {@link ScreenNavigator}.
  */
-public class GalagaGame extends JFrame {
-
-    private static final String SCREEN_MENU = "menu";
-    private static final String SCREEN_INSTRUCTIONS = "instructions";
-    private static final String SCREEN_GAME = "game";
+public class GalagaGame extends JFrame implements ScreenNavigator {
 
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel screens = new JPanel(cardLayout);
+    private final ScreenFactory screenFactory = new ScreenFactory();
 
-    private GamePanel gamePanel;
-    private GameController gameController;
+    /** Ekrany, które mają zachować stan pomiędzy wizytami (menu, instrukcje). */
+    private final Map<ScreenType, Screen> cachedScreens = new EnumMap<>(ScreenType.class);
+    /** Panele aktualnie dodane do CardLayout, potrzebne do ich podmiany. */
+    private final Map<ScreenType, JPanel> attachedPanels = new EnumMap<>(ScreenType.class);
+
+    private Screen currentScreen;
 
     public GalagaGame() {
         setTitle("Retro Space Shooter (Galaga Style)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        MenuPanel menuPanel = new MenuPanel(this::startGame, this::showInstructions, this::exitGame);
-        InstructionsPanel instructionsPanel = new InstructionsPanel(this::showMenu);
-
-        screens.add(menuPanel, SCREEN_MENU);
-        screens.add(instructionsPanel, SCREEN_INSTRUCTIONS);
-
         add(screens);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
 
-        showMenu();
+        navigateTo(ScreenType.MENU);
     }
 
-    private void showMenu() {
-        if (gameController != null) {
-            gameController.stop();
-        }
-        cardLayout.show(screens, SCREEN_MENU);
-    }
-
-    private void showInstructions() {
-        cardLayout.show(screens, SCREEN_INSTRUCTIONS);
-    }
-
-    /** Tworzy (przy pierwszym uruchomieniu) lub resetuje rozgrywkę i pokazuje ekran gry. */
-    private void startGame() {
-        Game game = new Game();
-        InputHandler inputHandler = new InputHandler(game::requestShoot);
-
-        if (gamePanel != null) {
-            screens.remove(gamePanel);
+    @Override
+    public void navigateTo(ScreenType type) {
+        if (currentScreen != null) {
+            currentScreen.onExit();
         }
 
-        gamePanel = new GamePanel(game, inputHandler);
-        screens.add(gamePanel, SCREEN_GAME);
+        Screen screen = resolveScreen(type);
+        attachPanel(type, screen.getPanel());
 
-        gameController = new GameController(game, gamePanel, inputHandler);
-        gameController.start();
-
-        cardLayout.show(screens, SCREEN_GAME);
-        gamePanel.requestFocusInWindow();
+        currentScreen = screen;
+        cardLayout.show(screens, type.name());
+        screen.onEnter();
     }
 
-    private void exitGame() {
+    /**
+     * Zwraca ekran dla danego typu. Menu i instrukcje są tworzone raz i buforowane
+     * (zachowują stan), natomiast ekran gry jest tworzony od nowa przy każdym wejściu,
+     * aby zawsze rozpoczynać świeżą rozgrywkę.
+     */
+    private Screen resolveScreen(ScreenType type) {
+        if (type == ScreenType.GAME) {
+            return screenFactory.create(type, this);
+        }
+        return cachedScreens.computeIfAbsent(type, t -> screenFactory.create(t, this));
+    }
+
+    private void attachPanel(ScreenType type, JPanel panel) {
+        JPanel previous = attachedPanels.get(type);
+        if (previous == panel) {
+            return;
+        }
+        if (previous != null) {
+            screens.remove(previous);
+        }
+        screens.add(panel, type.name());
+        attachedPanels.put(type, panel);
+    }
+
+    @Override
+    public void exitApplication() {
         dispose();
         System.exit(0);
     }

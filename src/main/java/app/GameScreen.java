@@ -1,0 +1,41 @@
+package app;
+
+import javax.swing.JPanel;
+
+import controller.GameController;
+import controller.InputHandler;
+import model.Game;
+import view.GamePanel;
+
+/**
+ * Ekran rozgrywki. Tworzy nową, niezależną instancję gry (model + widok + kontroler)
+ * i zarządza jej cyklem życia — start pętli gry przy wejściu, zatrzymanie przy wyjściu.
+ */
+public class GameScreen implements Screen {
+
+    private final GamePanel panel;
+    private final GameController controller;
+
+    public GameScreen() {
+        Game game = new Game();
+        InputHandler inputHandler = new InputHandler(game::requestShoot);
+        this.panel = new GamePanel(game, inputHandler);
+        this.controller = new GameController(game, panel, inputHandler);
+    }
+
+    @Override
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    @Override
+    public void onEnter() {
+        controller.start();
+        panel.requestFocusInWindow();
+    }
+
+    @Override
+    public void onExit() {
+        controller.stop();
+    }
+}
