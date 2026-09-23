@@ -5,11 +5,12 @@ import javax.swing.JPanel;
 import controller.GameController;
 import controller.InputHandler;
 import model.Game;
+import model.GameLogic;
 import view.GamePanel;
 
 /**
- * Ekran rozgrywki. Tworzy nową, niezależną instancję gry (model + widok + kontroler)
- * i zarządza jej cyklem życia — start pętli gry przy wejściu, zatrzymanie przy wyjściu.
+ * Ekran rozgrywki. Tworzy nową, niezależną instancję gry (model + logika + widok + kontroler)
+ * i zarządza jej cyklem życia.
  */
 public class GameScreen implements Screen {
 
@@ -18,10 +19,12 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         Game game = new Game();
-        InputHandler inputHandler = new InputHandler(game::requestShoot);
+        GameLogic gameLogic = new GameLogic(game);
+        InputHandler inputHandler = new InputHandler(gameLogic::requestShoot);
+
         this.panel = new GamePanel(game);
         this.panel.addKeyListener(inputHandler);
-        this.controller = new GameController(game, panel, inputHandler);
+        this.controller = new GameController(gameLogic, panel, inputHandler);
     }
 
     @Override
