@@ -16,7 +16,7 @@ public class Enemy {
 
     private int x;
     private int y;
-    private int direction = 1; // 1 = w prawo, -1 = w lewo
+    private Direction direction = Direction.RIGHT;
 
     public Enemy(int x, int y) {
         this.x = x;
@@ -24,12 +24,12 @@ public class Enemy {
     }
 
     public void moveHorizontally() {
-        x += SPEED * direction;
+        x += SPEED * direction.getStep();
     }
 
     /** Odwraca kierunek ruchu formacji i przesuwa przeciwnika niżej. */
     public void reverseDirectionAndDropDown() {
-        direction *= -1;
+        direction = direction.opposite();
         y += DROP_STEP;
     }
 
@@ -55,5 +55,27 @@ public class Enemy {
 
     public int getHeight() {
         return HEIGHT;
+    }
+
+    /** Kierunek poziomego ruchu przeciwnika w formacji. */
+    private enum Direction {
+        LEFT(-1),
+        RIGHT(1);
+
+        private final int step;
+
+        Direction(int step) {
+            this.step = step;
+        }
+
+        /** Zwraca przesunięcie na osi X odpowiadające temu kierunkowi. */
+        int getStep() {
+            return step;
+        }
+
+        /** Zwraca kierunek przeciwny do bieżącego. */
+        Direction opposite() {
+            return this == LEFT ? RIGHT : LEFT;
+        }
     }
 }

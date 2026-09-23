@@ -2,14 +2,10 @@ package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import model.Game;
 
@@ -30,30 +26,15 @@ public class MenuPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridy = 0;
-        add(createTitleLabel(), gbc);
+        add(SwingComponentFactory.createTitleLabel("RETRO SPACE SHOOTER"), gbc);
 
         gbc.gridy = 1;
-        add(createButton("Start gry", onStart), gbc);
+        add(SwingComponentFactory.createButton("Start gry", onStart), gbc);
 
         gbc.gridy = 2;
-        add(createButton("Instrukcje", onInstructions), gbc);
+        add(SwingComponentFactory.createButton("Instrukcje", onInstructions), gbc);
 
         gbc.gridy = 3;
-        add(createButton("Wyjście", onExit), gbc);
-    }
-
-    private JLabel createTitleLabel() {
-        JLabel title = new JLabel("RETRO SPACE SHOOTER", SwingConstants.CENTER);
-        title.setForeground(Color.CYAN);
-        title.setFont(new Font("Arial", Font.BOLD, 26));
-        return title;
-    }
-
-    private JButton createButton(String text, Runnable onClick) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setFocusPainted(false);
-        button.addActionListener(e -> onClick.run());
-        return button;
+        add(SwingComponentFactory.createButton("Wyjście", onExit), gbc);
     }
 }

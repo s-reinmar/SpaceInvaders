@@ -1,4 +1,4 @@
-package app;
+package screen;
 
 /**
  * Identyfikuje dostępne ekrany aplikacji. Zastępuje wcześniejsze,

@@ -1,4 +1,4 @@
-package app;
+package screen;
 
 /**
  * Tworzy instancje {@link Screen} odpowiednie dla danego {@link ScreenType}.

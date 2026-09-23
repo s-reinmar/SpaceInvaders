@@ -1,4 +1,4 @@
-package app;
+package screen;
 
 /**
  * Kontrakt nawigacji między ekranami. Ekrany zależą wyłącznie od tego interfejsu,

@@ -1,21 +1,23 @@
-package app;
+package screen;
 
 import java.awt.CardLayout;
 import java.util.EnumMap;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 /**
- * Punkt wejścia aplikacji. Pełni rolę "composition root": tworzy okno,
- * deleguje tworzenie ekranów do {@link ScreenFactory} i przełącza je
- * przez {@link CardLayout}, implementując {@link ScreenNavigator}.
+ * Koordynuje przełączanie ekranów aplikacji przy użyciu {@link CardLayout}.
+ * Odpowiada wyłącznie za tworzenie/cache'owanie ekranów (przez {@link ScreenFactory}),
+ * podmianę paneli w kontenerze oraz wywoływanie cyklu życia ekranów
+ * ({@link Screen#onEnter()} / {@link Screen#onExit()}). Nie zna nic o oknie
+ * aplikacji poza tym, że może je zamknąć na żądanie ({@link #exitApplication()}).
  */
-public class GalagaGame extends JFrame implements ScreenNavigator {
+public class ScreenCoordinator implements ScreenNavigator {
 
+    private final JFrame window;
     private final CardLayout cardLayout = new CardLayout();
-    private final JPanel screens = new JPanel(cardLayout);
+    private final JPanel container = new JPanel(cardLayout);
     private final ScreenFactory screenFactory = new ScreenFactory();
 
     /** Ekrany, które mają zachować stan pomiędzy wizytami (menu, instrukcje). */
@@ -25,16 +27,13 @@ public class GalagaGame extends JFrame implements ScreenNavigator {
 
     private Screen currentScreen;
 
-    public GalagaGame() {
-        setTitle("Retro Space Shooter (Galaga Style)");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+    public ScreenCoordinator(JFrame window) {
+        this.window = window;
+    }
 
-        add(screens);
-        navigateTo(ScreenType.MENU);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+    /** Zwraca kontener Swing, który należy dodać do okna aplikacji. */
+    public JPanel getContainer() {
+        return container;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class GalagaGame extends JFrame implements ScreenNavigator {
         attachPanel(type, screen.getPanel());
 
         currentScreen = screen;
-        cardLayout.show(screens, type.name());
+        cardLayout.show(container, type.name());
         screen.onEnter();
     }
 
@@ -69,19 +68,15 @@ public class GalagaGame extends JFrame implements ScreenNavigator {
             return;
         }
         if (previous != null) {
-            screens.remove(previous);
+            container.remove(previous);
         }
-        screens.add(panel, type.name());
+        container.add(panel, type.name());
         attachedPanels.put(type, panel);
     }
 
     @Override
     public void exitApplication() {
-        dispose();
+        window.dispose();
         System.exit(0);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(GalagaGame::new);
     }
 }

@@ -1,4 +1,4 @@
-package app;
+package screen;
 
 import javax.swing.JPanel;
 
@@ -19,7 +19,8 @@ public class GameScreen implements Screen {
     public GameScreen() {
         Game game = new Game();
         InputHandler inputHandler = new InputHandler(game::requestShoot);
-        this.panel = new GamePanel(game, inputHandler);
+        this.panel = new GamePanel(game);
+        this.panel.addKeyListener(inputHandler);
         this.controller = new GameController(game, panel, inputHandler);
     }
 

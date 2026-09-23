@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 
 import model.Game;
 
@@ -29,9 +28,7 @@ public class InstructionsPanel extends JPanel {
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
 
-        JLabel title = new JLabel("INSTRUKCJE", SwingConstants.CENTER);
-        title.setForeground(Color.CYAN);
-        title.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel title = SwingComponentFactory.createTitleLabel("INSTRUKCJE", 24);
         add(title, BorderLayout.NORTH);
 
         JTextArea textArea = new JTextArea(INSTRUCTIONS_TEXT);
@@ -44,10 +41,7 @@ public class InstructionsPanel extends JPanel {
         textArea.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 30, 20, 30));
         add(textArea, BorderLayout.CENTER);
 
-        JButton backButton = new JButton("Powrót do menu");
-        backButton.setFont(new Font("Arial", Font.BOLD, 16));
-        backButton.setFocusPainted(false);
-        backButton.addActionListener(e -> onBack.run());
+        JButton backButton = SwingComponentFactory.createButton("Powrót do menu", onBack);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);

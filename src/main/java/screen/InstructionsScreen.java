@@ -1,4 +1,4 @@
-package app;
+package screen;
 
 import javax.swing.JPanel;
 

@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
-import controller.InputHandler;
 import model.Bullet;
 import model.Enemy;
 import model.Game;
@@ -27,14 +26,13 @@ public class GamePanel extends JPanel {
     private final BufferedImage playerSprite;
     private final BufferedImage enemySprite;
 
-    public GamePanel(Game game, InputHandler inputHandler) {
+    public GamePanel(Game game) {
         this.game = game;
         this.playerSprite = SpriteLoader.load(PLAYER_SPRITE);
         this.enemySprite = SpriteLoader.load(ENEMY_SPRITE);
         setPreferredSize(new Dimension(Game.BOARD_WIDTH, Game.BOARD_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
-        addKeyListener(inputHandler);
     }
 
     @Override
