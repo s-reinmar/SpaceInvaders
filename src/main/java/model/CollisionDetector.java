@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class CollisionDetector {
 
+    // Stałe określające granice/marginesy strefy kolizji pocisku
+    private static final int BULLET_BOUND_OFFSET_X = 0;
+    private static final int BULLET_BOUND_OFFSET_Y = 0;
+
     private CollisionDetector() {
         // klasa narzędziowa
     }
@@ -25,6 +29,7 @@ public class CollisionDetector {
             Iterator<Enemy> enemyIterator = enemies.iterator();
             while (enemyIterator.hasNext()) {
                 Enemy enemy = enemyIterator.next();
+
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     bulletIterator.remove();
                     enemyIterator.remove();
