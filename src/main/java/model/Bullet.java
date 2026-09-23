@@ -7,9 +7,9 @@ import java.awt.Rectangle;
  */
 public class Bullet {
 
-    private static final int WIDTH = 4;
-    private static final int HEIGHT = 12;
-    private static final int SPEED = 10;
+    private static final int BULLET_WIDTH = 4; // Szerokość pocisku
+    private static final int BULLET_HEIGHT = 12; // Wysokość pocisku
+    private static final int BULLET_SPEED = 10; // Prędkość pocisku (ilość pikseli, o które pocisk przesuwa się w górę w każdej aktualizacji)
 
     private int x;
     private int y;
@@ -20,15 +20,15 @@ public class Bullet {
     }
 
     public void update() {
-        y -= SPEED;
+        y -= BULLET_SPEED;
     }
 
     public boolean isOffScreen() {
-        return y + HEIGHT < 0;
+        return y + BULLET_HEIGHT < 0;
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, WIDTH, HEIGHT);
+        return new Rectangle(x, y, BULLET_WIDTH, BULLET_HEIGHT);
     }
 
     public int getX() {
@@ -40,10 +40,10 @@ public class Bullet {
     }
 
     public int getWidth() {
-        return WIDTH;
+        return BULLET_WIDTH;
     }
 
     public int getHeight() {
-        return HEIGHT;
+        return BULLET_HEIGHT;
     }
 }
